@@ -16,15 +16,23 @@ public final class SimpleBoard implements Board {
 
     public SimpleBoard(int dimension, int blackHolesNumber, SquareBoardBlackHolesGenerator blackHolesGenerator) {
 
-        if (blackHolesNumber >= dimension * dimension) {
-            throw new IllegalStateException("Incorrect board parameters, too many black holes");
-        }
+        validateParameters(dimension, blackHolesNumber);
 
         this.cells = new Cell[dimension][dimension];
         this.dimension = dimension;
         this.blackHoles = unmodifiableSet(blackHolesGenerator.generateBlackHoles(dimension, blackHolesNumber));
 
         initBoard(blackHoles);
+    }
+
+    private void validateParameters(int dimension, int blackHolesNumber) {
+        if (blackHolesNumber >= dimension * dimension) {
+            throw new IllegalStateException("Incorrect board parameters, too many black holes");
+        }
+
+        if (dimension <= 0) {
+            throw new IllegalStateException("Incorrect board parameters, no dimension");
+        }
     }
 
     void initBoard(Set<CellPosition> blackHoles) {
