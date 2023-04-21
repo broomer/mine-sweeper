@@ -1,4 +1,4 @@
-package org.vmetl.minesweeper.game;
+package org.vmetl.minesweeper.game.board;
 
 public enum CellBoardState {
     EXPLODED,

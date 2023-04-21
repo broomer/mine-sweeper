@@ -1,12 +1,17 @@
 package org.vmetl.minesweeper.game;
 
+import org.vmetl.minesweeper.game.board.CellPosition;
+import org.vmetl.minesweeper.game.board.SimpleBoard;
+import org.vmetl.minesweeper.game.controller.RandomSquareBoardBlackHolesGenerator;
+import org.vmetl.minesweeper.game.controller.GameController;
+
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
         if (args.length != 2) {
-            System.out.println("Usage: java -jar game.jar <dimension> <black_holes_number>" + args.length);
+            System.out.println("Usage: java -jar msw.jar <dimension> <black_holes_number>" + args.length);
             return;
         }
 
@@ -19,19 +24,20 @@ public class Main {
         }
 
         GameController gameController = new GameController();
-        gameController.newGame(dimension, blackHolesNumber);
+        gameController.newGame(dimension, blackHolesNumber,
+                new SimpleBoard(dimension, blackHolesNumber, new RandomSquareBoardBlackHolesGenerator()));
 
         CellPosition cellPosition = gameController.openRandomCell();
         System.out.println("Opening cell " + cellPosition);
 
-        if (gameController.gameOver()) {
+        if (gameController.isGameOver()) {
             printBoard(gameController.getFullView());
             System.out.println("======= GAME OVER =======");
         } else {
-            if (gameController.gameWon()) {
+            if (gameController.isGameWon()) {
                 System.out.println("======= Congratulations, you won! =======");
             }
-            printBoard(gameController.getOpenView());
+            printBoard(gameController.getCurrentView());
         }
     }
 

@@ -1,20 +1,20 @@
-package org.vmetl.minesweeper.game;
+package org.vmetl.minesweeper.game.board;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import org.vmetl.minesweeper.game.controller.ActionType;
+import org.vmetl.minesweeper.game.controller.SquareBoardBlackHolesGenerator;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableSet;
 
-public final class Board {
+public final class SimpleBoard implements Board {
 
     private final Cell[][] cells;
     private final int dimension;
     private final Set<CellPosition> blackHoles;
 
-    public Board(int dimension, int blackHolesNumber, BlackHolesGenerator blackHolesGenerator) {
+    public SimpleBoard(int dimension, int blackHolesNumber, SquareBoardBlackHolesGenerator blackHolesGenerator) {
 
         if (blackHolesNumber >= dimension * dimension) {
             throw new IllegalStateException("Incorrect board parameters, too many black holes");
@@ -23,14 +23,6 @@ public final class Board {
         this.cells = new Cell[dimension][dimension];
         this.dimension = dimension;
         this.blackHoles = unmodifiableSet(blackHolesGenerator.generateBlackHoles(dimension, blackHolesNumber));
-
-        initBoard(blackHoles);
-    }
-
-    Board(int dimension, Set<CellPosition> blackHoles) {
-        this.cells = new Cell[dimension][dimension];
-        this.dimension = dimension;
-        this.blackHoles = blackHoles;
 
         initBoard(blackHoles);
     }
@@ -61,6 +53,7 @@ public final class Board {
         return cells[cellPosition.getX()][cellPosition.getY()];
     }
 
+    @Override
     public void changeCellState(CellPosition cellPosition, ActionType action) {
         Cell cell = getCellAt(cellPosition);
 
@@ -71,6 +64,7 @@ public final class Board {
         openCell(cell);
     }
 
+    @Override
     public boolean hasExplodedCells() {
         for (Cell[] row : cells) {
             for (Cell cell : row) {
@@ -82,6 +76,7 @@ public final class Board {
         return false;
     }
 
+    @Override
     public boolean allCellsOpen() {
         int totalOpened = 0;
         for (Cell[] row : cells) {
@@ -94,7 +89,7 @@ public final class Board {
         return dimension * dimension - blackHoles.size() == totalOpened;
     }
 
-    void openCell(Cell cell) {
+    private void openCell(Cell cell) {
 
         if (cell.getState() == CellBoardState.UNKNOWN || cell.getState() == CellBoardState.FLAGGED) {
             Collection<CellPosition> adjacentPositions = getAdjacentPositions(cell.getPosition());
@@ -111,8 +106,11 @@ public final class Board {
         }
     }
 
+    @Override
     public Cell[][] getCells() {
-        return cells;
+        return Arrays.stream(cells)
+                .map(row -> Arrays.stream(row).map(Cell::of).toArray(Cell[]::new))
+                .toArray(Cell[][]::new);
     }
 
     List<CellPosition> getAdjacentPositions(CellPosition position) {
@@ -134,7 +132,4 @@ public final class Board {
                 && position.getY() >= 0 && position.getY() < dimension;
     }
 
-    public int getDimension() {
-        return dimension;
-    }
 }

@@ -1,4 +1,4 @@
-package org.vmetl.minesweeper.game;
+package org.vmetl.minesweeper.game.board;
 
 
 import java.util.Objects;
@@ -37,6 +37,13 @@ public final class Cell {
 
     public boolean isBlackHole() {
         return isBlackHole;
+    }
+
+    public static Cell of(Cell anotherCell) {
+        Cell copiedCell = new Cell(anotherCell.position, anotherCell.isBlackHole, anotherCell.adjacentHolesNumber);
+        copiedCell.setState(anotherCell.getState());
+
+        return copiedCell;
     }
 
     @Override

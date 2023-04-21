@@ -1,4 +1,4 @@
-package org.vmetl.minesweeper.game;
+package org.vmetl.minesweeper.game.controller;
 
 public enum ActionType {
     OPEN,
