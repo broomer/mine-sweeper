@@ -5,18 +5,20 @@ It does not contain fully interactive console (albeit making it from this implem
 The project is organized as a maven multi-module project with two artifacts: console and game.
 The game module is an independent 'game engine' and can be used by some sort of interactive module (console, fancy UI etc).
 
-Prerequisites:
+## Prerequisites
 Java 11, Maven.
 
-Usage:
+## Usage
 
-Build:
+- build:
 
-mvn install
+  mvn install
 
-Run the demo (creates a board of given dimensions and number of black holes, then emulates one 'open interaction' with random cell):
-cd console/target &&
-java -jar msw.jar 5 10
+- run the demo (creates a board of given dimensions and number of black holes, then emulates one 'open interaction' with random cell):
 
-- this example will run the 5 x 5 board with 10 black holes and randomly 'opens' one cell. Please do not use dimension greater than 60.
+
+  cd console/target &&
+  java -jar msw.jar 5 10
+
+This example will run the 5 x 5 board with 10 black holes and randomly 'opens' one cell. Please do not use dimension greater than 60.
 
